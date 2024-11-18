@@ -20,7 +20,7 @@ func NewKOLController(context *gin.Engine, KOLServiceObject Interface.IKOLServic
 		KOLService: KOLServiceObject,
 	}
 
-	context.GET("/healthz", func(c *gin.Context) {
+	context.GET("/kol/healthz", func(c *gin.Context) {
 		c.JSON(http.StatusOK, map[string]string{"status": "ok"})
 	})
 

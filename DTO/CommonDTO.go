@@ -7,6 +7,8 @@ type SearchParam struct {
 
 type AddedParam map[string]string
 
+type Param map[interface{}]interface{}
+
 type AddedParamInterface map[string]interface{}
 
 type GetPageParam struct {

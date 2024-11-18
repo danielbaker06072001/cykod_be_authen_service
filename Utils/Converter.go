@@ -1,6 +1,7 @@
 package Utils
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -39,4 +40,17 @@ func TimeToString(x time.Time) string {
 func StringToTime(s string) time.Time {
 	temp, _ := time.Parse("2006-01-02T15:04:05.000", s)
 	return temp
+}
+
+func ConvertInterface(value interface{}) string {
+	switch v := value.(type) {
+	case int64:
+		return strconv.FormatInt(v, 10)
+	case float64:
+		return strconv.FormatFloat(v, 'g', -1, 64)
+	case string:
+		return v
+	default:
+		return fmt.Sprintf("%v", value)
+	}
 }

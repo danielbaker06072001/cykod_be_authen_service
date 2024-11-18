@@ -17,6 +17,29 @@ func NewUserDataLayer(Conn *gorm.DB) Interface.IUserData {
 	}
 }
 
-func (UserData *UserData) GetUserByUsername(username string) (*Model.KOL, error) {
-	panic("implement me")
+func (UserData *UserData) GetUserByUsername(username string) (*Model.Userprofile, error) {
+	var db = UserData.DB_CONNECTION.Model(&Model.Userprofile{})
+	var userprofileMode Model.Userprofile
+	if err := db.Where(`"username" = ?`, username).First(&userprofileMode).Error; err != nil {
+		return nil, err
+	}
+	return &userprofileMode, nil
+}
+
+func (UserData *UserData) GetUserByEmail(email string) (*Model.Userprofile, error) {
+	var db = UserData.DB_CONNECTION.Model(&Model.Userprofile{})
+	var userprofileMode Model.Userprofile
+	if err := db.Where(`"email" = ?`, email).First(&userprofileMode).Error; err != nil {
+		return nil, err
+	}
+	return &userprofileMode, nil
+}
+
+func (UserData *UserData) CheckUserExists(username string, email string) (bool, error) {
+	var db = UserData.DB_CONNECTION.Model(&Model.Userprofile{})
+	var userprofileMode Model.Userprofile
+	if err := db.Where(`"username" = ? OR "email" = ?`, username, email).First(&userprofileMode).Error; err != nil {
+		return false, err
+	}
+	return true, nil
 }

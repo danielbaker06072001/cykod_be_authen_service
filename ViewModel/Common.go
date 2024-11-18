@@ -13,3 +13,9 @@ type CommonUpdateResponse struct {
 	ErrorMessage string `json:"errormessage"`
 	Guid         string `json:"guid"`
 }
+
+type CommonResponse struct {
+	Status       string  `json:"status"` // * Status of the response should be "ok" or "error"
+	ErrorMessage *string `json:"errormessage"`
+	Message      string  `json:"message"`
+}
