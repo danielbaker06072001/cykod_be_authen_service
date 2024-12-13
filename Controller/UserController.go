@@ -48,6 +48,15 @@ func (UserController *UserController) login(context *gin.Context) {
 	panic("implement me")
 }
 
+
+/*
+	* This function register a new user to the system
+	Stepss:
+		1. Check if all fields are filled
+		2. Check if the user already exists using redis, if not create a new user
+			2.1 If the User is not already exist, create user and also set new in Redis
+		3. Return a success message
+*/
 func (UserController *UserController) register(context *gin.Context) {
 	var RegisterVM ViewModel.RegisterViewModel
 

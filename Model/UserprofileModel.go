@@ -6,6 +6,8 @@ type Userprofile struct {
 	UserID      int64  `json:"user_id" gorm:"primaryKey; column:user_id"`
 	Username    string `json:"username" gorm:"column:username"`
 	Email       string `json:"email" gorm:"column:email"`
+	Password    string `json:"password" gorm:"column:password"`
+	Salt 	  	string `json:"salt" gorm:"column:salt"`
 	FirstName   string `json:"first_name" gorm:"column:first_name"`
 	LastName    string `json:"last_name" gorm:"column:last_name"`
 	Active      bool   `json:"active" gorm:"column:active"`

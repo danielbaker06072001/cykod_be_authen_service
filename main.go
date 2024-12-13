@@ -28,13 +28,20 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db_data, _ := Config.Connect(config)
-
+	db_data, err := Config.Connect(config)
+	if err != nil {
+		log.Fatal("Error connecting to database")
+	}
+	db_redis, err  := Config.ConnectRedis(config)
+	if err != nil {
+		log.Fatal("Error connecting to redis")
+	}
+	
 	dataLayer := Data.NewKolDataLayer(db_data)
 	service := Service.NewKOLService(dataLayer)
 	Controller.NewKOLController(router, service)
 	
-	userDataLayer := Data.NewUserDataLayer(db_data)
+	userDataLayer := Data.NewUserDataLayer(db_data, db_redis)
 	userService := UserService.NewUserServiceLayer(userDataLayer)
 	Controller.NewUserControllerLayer(router, userService)
 
