@@ -7,6 +7,6 @@ import (
 )
 
 type IUserService interface {
-	GetUserByUsername(username string) (*Model.Userprofile, error)
+	GetUserByUsername(username string) (*Model.UserProfile, error)
 	RegisterUser(user DTO.Param) (*DTORegister.RegisterInputDTO, error)
 }

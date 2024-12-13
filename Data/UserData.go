@@ -23,18 +23,18 @@ func NewUserDataLayer(Conn *gorm.DB, ConnRedis *redis.Client) Interface.IUserDat
 	}
 }
 
-func (UserData *UserData) GetUserByUsername(username string) (*Model.Userprofile, error) {
-	var db = UserData.DB_CONNECTION.Model(&Model.Userprofile{})
-	var userprofileMode Model.Userprofile
+func (UserData *UserData) GetUserByUsername(username string) (*Model.UserProfile, error) {
+	var db = UserData.DB_CONNECTION.Model(&Model.UserProfile{})
+	var userprofileMode Model.UserProfile
 	if err := db.Where(`"username" = ?`, username).First(&userprofileMode).Error; err != nil {
 		return nil, err
 	}
 	return &userprofileMode, nil
 }
 
-func (UserData *UserData) GetUserByEmail(email string) (*Model.Userprofile, error) {
-	var db = UserData.DB_CONNECTION.Model(&Model.Userprofile{})
-	var userprofileMode Model.Userprofile
+func (UserData *UserData) GetUserByEmail(email string) (*Model.UserProfile, error) {
+	var db = UserData.DB_CONNECTION.Model(&Model.UserProfile{})
+	var userprofileMode Model.UserProfile
 	if err := db.Where(`"email" = ?`, email).First(&userprofileMode).Error; err != nil {
 		return nil, err
 	}
@@ -60,9 +60,10 @@ func (UserData *UserData) CheckUserExists(username string, email string) (bool, 
 	return true, nil
 }
 
-func (UserData *UserData) CreateUser(params DTO.Param) (*Model.Userprofile, error) {
-	var db = UserData.DB_CONNECTION
-	var userprofileModel Model.Userprofile
+func (UserData *UserData) CreateUser(params DTO.Param) (*Model.UserProfile, error) {
+	var db = UserData.DB_CONNECTION.Model(&Model.UserProfile{})
+	var userprofileModel Model.UserProfile
+	
 
 	userprofileModel.Username = Utils.ConvertInterface(params["Username"])
 	userprofileModel.Email = Utils.ConvertInterface(params["Email"])
@@ -76,6 +77,7 @@ func (UserData *UserData) CreateUser(params DTO.Param) (*Model.Userprofile, erro
 
 	fmt.Printf("UserprofileModel: %v", userprofileModel)
 
+	
 	if err := db.Create(&userprofileModel).Error; err != nil {
 		return nil, err
 	}

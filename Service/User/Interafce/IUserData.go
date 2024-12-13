@@ -6,8 +6,8 @@ import (
 )
 
 type IUserData interface {
-	GetUserByUsername(username string) (*Model.Userprofile, error)
-	GetUserByEmail(email string) (*Model.Userprofile, error)
+	GetUserByUsername(username string) (*Model.UserProfile, error)
+	GetUserByEmail(email string) (*Model.UserProfile, error)
 	CheckUserExists(username string, email string) (bool, error)
-	CreateUser(params DTO.Param) (*Model.Userprofile, error)
+	CreateUser(params DTO.Param) (*Model.UserProfile, error)
 }

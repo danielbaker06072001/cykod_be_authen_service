@@ -2,7 +2,7 @@ package Model
 
 import "wan-api-verify-user/AppConfig/Common"
 
-type Userprofile struct {
+type UserProfile struct {
 	UserID      int64  `json:"user_id" gorm:"primaryKey; column:user_id"`
 	Username    string `json:"username" gorm:"column:username"`
 	Email       string `json:"email" gorm:"column:email"`
@@ -18,6 +18,6 @@ type Userprofile struct {
 	UpdatedDate string `json:"updated_date" gorm:"column:updated_date"`
 }
 
-func (Userprofile) TableName() string {
+func (UserProfile) TableName() string {
 	return Common.TABLE_USERPROFILE
 }

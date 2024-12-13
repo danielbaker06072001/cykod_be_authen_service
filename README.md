@@ -11,3 +11,7 @@
 # How to create migrate file
 
 migrate create -ext sql -dir Migration/sql -seq create_users_table
+
+# How to run migrate up
+
+make <command_in_makefile>
