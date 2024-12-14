@@ -2,6 +2,7 @@ package Data
 
 import (
 	"fmt"
+	"hash/crc32"
 	"wan-api-verify-user/DTO"
 	"wan-api-verify-user/Model"
 	Interface "wan-api-verify-user/Service/User/Interafce"
@@ -43,43 +44,59 @@ func (UserData *UserData) GetUserByEmail(email string) (*Model.UserProfile, erro
 
 // * Check if the user already exists using Redis cache 
 // ? We're going to the Filter Bloom pattern, using SET u:bit
-func (UserData *UserData) CheckUserExists(username string, email string) (bool, error) {
+// @return error (if the user already exists return error)
+func (UserData *UserData) CheckUserExists(username string, email string) (error) {
 	var db_redis = UserData.DB_REDIS
 
-	// err := db_redis.SetBit(db_redis.Context(), "u:bit", 12345, 1).Err()
-	// if err != nil {
-	// 	return false, err
-	// }
+	// ? Step 1: Hash the username and email using CRC32 (no duplicate should appear, if it does, we can let user know to recreate new username or email)
+	usernameHash := crc32.ChecksumIEEE([]byte(username))
+	emailHash := crc32.ChecksumIEEE([]byte(email))
 
-	// ? Get the value of the bit at offset x (to see if the user exists)
-	_ , err := db_redis.GetBit(db_redis.Context(), "u:bit", 12345).Result()
-	if err != nil {
-		return false, err
+	// ? Step 2: Check if the bits of (Username, Email) in the Redis
+	userExist := db_redis.GetBit(db_redis.Context(), "u:bit", int64(usernameHash)).Val()
+	if userExist != 0 {
+		return fmt.Errorf("username already exists")
 	}
-
-	return true, nil
+	emailExist := db_redis.GetBit(db_redis.Context(), "u:bit", int64(emailHash)).Val()
+	if emailExist != 0 {
+		return fmt.Errorf("email already exists")
+	}
+	return nil
 }
 
 func (UserData *UserData) CreateUser(params DTO.Param) (*Model.UserProfile, error) {
 	var db = UserData.DB_CONNECTION.Model(&Model.UserProfile{})
 	var userprofileModel Model.UserProfile
 	
-
+	// * Create new User in the database
 	userprofileModel.Username = Utils.ConvertInterface(params["Username"])
 	userprofileModel.Email = Utils.ConvertInterface(params["Email"])
 	userprofileModel.Password = Utils.ConvertInterface(params["Password"])
+	userprofileModel.Salt = Utils.ConvertInterface(params["Salt"])
 	userprofileModel.FirstName = Utils.ConvertInterface(params["FirstName"])
 	userprofileModel.LastName = Utils.ConvertInterface(params["LastName"])
 	userprofileModel.Active = true // ! Temporarily set active to true, in the future it will need email verification
 	userprofileModel.Status = "ACTIVE"
-	userprofileModel.CreatedBy = "SYSTEM"
 	userprofileModel.CreatedDate = Utils.GetCurrentTime()
 
-	fmt.Printf("UserprofileModel: %v", userprofileModel)
-
-	
 	if err := db.Create(&userprofileModel).Error; err != nil {
 		return nil, err
 	}
+
+	// * Create new User in the Redis
+	// ? Step 1: Hash the username and email using CRC32 (no duplicate should appear, if it does, we can let user know to recreate new username or email)
+	usernameHash := crc32.ChecksumIEEE([]byte(userprofileModel.Username))
+	emailHash := crc32.ChecksumIEEE([]byte(userprofileModel.Email))
+
+	// ? Step 2: Set the bits of (Username, Email) in the Redis 
+	err := UserData.DB_REDIS.SetBit(UserData.DB_REDIS.Context(), "u:bit", int64(usernameHash), 1).Err()
+	if err != nil {
+		return nil, err
+	}
+	err = UserData.DB_REDIS.SetBit(UserData.DB_REDIS.Context(), "u:bit", int64(emailHash), 1).Err()
+	if err != nil {
+		return nil, err
+	}
+
 	return &userprofileModel, nil
 }

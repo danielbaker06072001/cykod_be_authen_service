@@ -1,7 +1,6 @@
 package Service
 
 import (
-	"fmt"
 	"wan-api-verify-user/DTO"
 	DTORegister "wan-api-verify-user/DTO/RegisterDTO"
 	"wan-api-verify-user/Model"
@@ -31,18 +30,36 @@ func (UserService *UserService) RegisterUser(params DTO.Param) (*DTORegister.Reg
 	email := Utils.ConvertInterface(params["Email"])
 
 
-	_, err := UserService.UserDL.GetUserByEmail( email)
-	if err == nil {
-		return nil, fmt.Errorf("user already exists with username: %s or email: %s", username, email)
+	// Check if the user already exists
+	err := UserService.UserDL.CheckUserExists(username, email)
+	if err != nil {
+		return nil, err
 	}
 
-	// Create a new user if the user does not exist
+	// Hashing the password and applying the salt
+	password := Utils.ConvertInterface(params["Password"])
+	salt, err := Utils.GenerateSalt(10); // Generate a random salt
+	if err != nil {
+		return nil, err
+	}
+	hashedPassword, err := Utils.HashPassword(password, salt)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Store the salt in the params that later passed on to create user
+	params["Salt"] = salt
+	params["Password"] = hashedPassword
 
+	// Create a new user if the user does not exist
 	userprofileModel, err := UserService.UserDL.CreateUser(params)
 	if err != nil {
 		return nil, err
 	}
 	
-	fmt.Print(userprofileModel)
+	registerDTO.Email = userprofileModel.Email
+	registerDTO.Username = userprofileModel.Username
+	registerDTO.LastName = userprofileModel.LastName
+	registerDTO.FirstName = userprofileModel.FirstName
 	return &registerDTO, nil
 }

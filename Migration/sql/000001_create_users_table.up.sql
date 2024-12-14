@@ -12,7 +12,7 @@ CREATE TABLE UserProfile (
     status VARCHAR(10) NOT NULL,
     created_by INT,
     created_date TIMESTAMP,
-    update_by INT,
+    updated_by INT,
     updated_date TIMESTAMP
 );
 

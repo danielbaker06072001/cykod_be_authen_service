@@ -1,6 +1,9 @@
 package Model
 
-import "wan-api-verify-user/AppConfig/Common"
+import (
+	"time"
+	"wan-api-verify-user/AppConfig/Common"
+)
 
 type UserProfile struct {
 	UserID      int64  `json:"user_id" gorm:"primaryKey; column:user_id"`
@@ -12,10 +15,10 @@ type UserProfile struct {
 	LastName    string `json:"last_name" gorm:"column:last_name"`
 	Active      bool   `json:"active" gorm:"column:active"`
 	Status      string `json:"status" gorm:"column:status"`
-	CreatedBy   string `json:"created_by" gorm:"column:created_by"`
-	CreatedDate string `json:"created_date" gorm:"column:created_date"`
-	UpdatedBy   string `json:"updated_by" gorm:"column:updated_by"`
-	UpdatedDate string `json:"updated_date" gorm:"column:updated_date"`
+	CreatedBy   int64 `json:"created_by" gorm:"column:created_by"`
+	CreatedDate time.Time `json:"created_date" gorm:"column:created_date"`
+	UpdatedBy   int64 `json:"updated_by" gorm:"column:updated_by"`
+	UpdatedDate time.Time `json:"updated_date" gorm:"column:updated_date"`
 }
 
 func (UserProfile) TableName() string {

@@ -15,3 +15,10 @@ migrate create -ext sql -dir Migration/sql -seq create_users_table
 # How to run migrate up
 
 make <command_in_makefile>
+
+# How to connect to redis from docker, and how to check if bit exist
+
+docker exec -it authentication_redis redis-cli
+
+-   CHECK BIT: getbit u:bit 4097051691
+-   SET BIT : setbit u:bit 4097051691
