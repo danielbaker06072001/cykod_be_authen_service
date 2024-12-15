@@ -1,7 +1,9 @@
 package Service
 
 import (
+	"fmt"
 	"wan-api-verify-user/DTO"
+	DTOLogin "wan-api-verify-user/DTO/LoginDTO"
 	DTORegister "wan-api-verify-user/DTO/RegisterDTO"
 	"wan-api-verify-user/Model"
 	Interface "wan-api-verify-user/Service/User/Interafce"
@@ -20,6 +22,48 @@ func NewUserServiceLayer(UserDL Interface.IUserData) Interface.IUserService {
 
 func (UserService *UserService) GetUserByUsername(username string) (*Model.UserProfile, error) {
 	panic("implement me")
+}
+
+func (UserService *UserService) LoginUser(params DTO.Param) (*DTOLogin.LoginOutputDTO, error) {
+	var LoginOutputDTO DTOLogin.LoginOutputDTO
+	
+	username := Utils.ConvertInterface(params["Username"])
+	password := Utils.ConvertInterface(params["Password"])
+	fmt.Printf("User: %s, Password: %s", username, password)
+	
+	// Step 2.1: Check if the user exist in system by Redis, if not exist then return error
+	// We only check if username exist, email is not used for login
+	err := UserService.UserDL.CheckUserExists(username, "")
+	if err == nil {
+		return nil, fmt.Errorf("user does not exist, please register")
+	}
+
+	// Step 2.2: If user exist in redis, then continue check Redis if this user currently active
+	err = UserService.UserDL.CheckUserExistsActive(username)
+	if err == nil { // User is active return success message, (LOGIN SUCCESS)
+		return nil, err
+	} 
+	
+	// Step 2.3: If user is not active, then check if the user is exist in database
+	// TODO: Check passhash
+	userprofileModel, err := UserService.UserDL.GetUserByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+	// Step 2.3.1: If user is exist in database, then return success message and set the user to Redis (active)
+	// TODO: generate token
+	LoginOutputDTO.Username = userprofileModel.Username
+	LoginOutputDTO.Email = userprofileModel.Email
+	LoginOutputDTO.FirstName = userprofileModel.FirstName
+	LoginOutputDTO.LastName = userprofileModel.LastName
+
+	// Set the user to Redis (active), this is to prevent the user to login again using postgre sql, more efficient
+	err = UserService.UserDL.SetUserActive(username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &LoginOutputDTO, nil
 }
 
 func (UserService *UserService) RegisterUser(params DTO.Param) (*DTORegister.RegisterInputDTO, error) {
