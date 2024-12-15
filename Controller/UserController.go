@@ -52,7 +52,9 @@ func NewUserControllerLayer(context *gin.Engine, UserService Interface.IUserServ
 		2. Check if the user exist in the system using redis 
 			2.1 First check if the user exist in Redis, if not exist then return error
 			2.2 If user exist in redis , then continue check Redis if this user currently active
-				2.2.1 If user is active, then return success message
+				2.2.1 If user is active, then get passhash and salt from Redis
+				2.2.2 Check if the password is matched with the passhash and salt
+				2.2.3 If password is matched, then return success message
 			2.3 If user is not active, then check if the user is exist in database
 				2.3.1 If user is exist in database, then return success message
 					2.3.1.1 Then set the user to Redis (active)

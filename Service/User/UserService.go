@@ -8,6 +8,8 @@ import (
 	"wan-api-verify-user/Model"
 	Interface "wan-api-verify-user/Service/User/Interafce"
 	"wan-api-verify-user/Utils"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -39,16 +41,26 @@ func (UserService *UserService) LoginUser(params DTO.Param) (*DTOLogin.LoginOutp
 	}
 
 	// Step 2.2: If user exist in redis, then continue check Redis if this user currently active
-	err = UserService.UserDL.CheckUserExistsActive(username)
+	err, passhash, salt := UserService.UserDL.CheckUserExistsActive(username)
 	if err == nil { // User is active return success message, (LOGIN SUCCESS)
+		// Step 2.2.2: Check if the password is matched with the passhash and salt
+		err = bcrypt.CompareHashAndPassword([]byte(passhash), []byte(password + salt))
+		if err != nil {
+			return nil, fmt.Errorf("password is incorrect")
+		}
 		return nil, err
 	} 
-	
+
 	// Step 2.3: If user is not active, then check if the user is exist in database
 	// TODO: Check passhash
 	userprofileModel, err := UserService.UserDL.GetUserByUsername(username)
 	if err != nil {
 		return nil, err
+	}
+	// Step 2.3.2: Check if the password is matched with the passhash and salt from the database
+	err = bcrypt.CompareHashAndPassword([]byte(userprofileModel.Password), []byte(password + userprofileModel.Salt))
+	if err != nil {
+		return nil, fmt.Errorf("password is incorrect")
 	}
 	// Step 2.3.1: If user is exist in database, then return success message and set the user to Redis (active)
 	// TODO: generate token
@@ -58,7 +70,7 @@ func (UserService *UserService) LoginUser(params DTO.Param) (*DTOLogin.LoginOutp
 	LoginOutputDTO.LastName = userprofileModel.LastName
 
 	// Set the user to Redis (active), this is to prevent the user to login again using postgre sql, more efficient
-	err = UserService.UserDL.SetUserActive(username)
+	err = UserService.UserDL.SetUserActive(username, userprofileModel.Password, userprofileModel.Salt)
 	if err != nil {
 		return nil, err
 	}
