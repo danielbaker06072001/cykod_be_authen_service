@@ -52,7 +52,6 @@ func (UserService *UserService) LoginUser(params DTO.Param) (*DTOLogin.LoginOutp
 	} 
 
 	// Step 2.3: If user is not active, then check if the user is exist in database
-	// TODO: Check passhash
 	userprofileModel, err := UserService.UserDL.GetUserByUsername(username)
 	if err != nil {
 		return nil, err
