@@ -68,12 +68,12 @@ This project provides a robust authentication system to manage user registration
    cd authentication-services
    ```
 
-2.. **Install dependencies:**
+2. **Install dependencies:**
     ```bash
     go mod tidy
     ```
 
-    ## Configuration
+## Configuration
 - *Database Configuration*: Configure your database connection in the config package. Update the config.go file with your database connection details.
 
 - *Environment Variables*: Create a .env file in the root directory of the project and set the following variables:
