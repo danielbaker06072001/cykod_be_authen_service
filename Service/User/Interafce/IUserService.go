@@ -11,4 +11,5 @@ type IUserService interface {
 	GetUserByUsername(username string) (*Model.UserProfile, error)
 	RegisterUser(user DTO.Param) (*DTORegister.RegisterInputDTO, error)
 	LoginUser(user DTO.Param) (*DTOLogin.LoginOutputDTO, error)
+	GenerateToken(user *Model.UserProfile) (string, string, error)
 }
