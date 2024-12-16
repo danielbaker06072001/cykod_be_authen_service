@@ -102,7 +102,7 @@ Register a new user: Send a POST request to /register with the following JSON bo
 }
 ```
 
-#api-endpoints
+# API Endpoints
 POST /register: Registers a new user.
 POST /login: Authenticates a user and returns a success message if the credentials are valid.
 
@@ -116,7 +116,6 @@ curl -X POST http://localhost:8080/register -H "Content-Type: application/json" 
 curl -X POST http://localhost:8080/login -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
 ```
 
-# Command
 # Additional commands for testing
 
 ### How to create migrate file
