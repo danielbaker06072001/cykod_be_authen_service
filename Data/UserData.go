@@ -3,6 +3,8 @@ package Data
 import (
 	"fmt"
 	"hash/crc32"
+	"strconv"
+	"time"
 	"wan-api-verify-user/DTO"
 	"wan-api-verify-user/Model"
 	Interface "wan-api-verify-user/Service/User/Interafce"
@@ -61,6 +63,82 @@ func (UserData *UserData) CheckUserExists(username string, email string) (error)
 	if emailExist != 0 {
 		return fmt.Errorf("email already exists")
 	}
+	return nil
+}
+
+func (UserData *UserData) CheckUserExistsActive(username string) (error, string ,string) {
+	var db_redis = UserData.DB_REDIS
+	var thresholdTime = float64(time.Now().Unix() - 2592000) // 30 days in seconds
+	
+	// ? Step 1: Hash the username using CRC32 (no duplicate should appear, if it does, we can let user know to recreate new username)
+	usernamehash := crc32.ChecksumIEEE([]byte(username))
+	userkey := "active_user" 
+	member := strconv.FormatUint(uint64(usernamehash), 10)
+	score, err := db_redis.ZScore(db_redis.Context(), userkey, member).Result()
+	if err == redis.Nil {
+		return fmt.Errorf("username does not exist"), "", ""
+	} else if err != nil {
+		return err, "", ""
+	}
+
+	// ? Step 2: Check if the user is active
+	if score > thresholdTime { 
+		data, err := db_redis.HGetAll(db_redis.Context(), "u:"+member).Result()
+		if err != nil {
+			return err, "", ""
+		}
+
+		// Retrieve passhash and salt from Redis
+		passhash := data["passhash"]
+		salt := data["salt"]
+		if passhash == "" && salt == "" {
+			return fmt.Errorf("error retrieving user data"), "",""
+		}
+		return nil, passhash, salt
+	} 
+	
+	
+	return fmt.Errorf("user is not active"), "", ""
+}
+
+/*
+	* Set the user to active in the Redis after they logged in
+	? Active user will be set with time to live (TTL) of 30 days
+*/
+func (UserData *UserData) SetUserActive(username string, passHash string, salt string) (error) {
+	var db_redis = UserData.DB_REDIS
+	usernamehash := crc32.ChecksumIEEE([]byte(username))
+	userkey := "active_user"
+	member := strconv.FormatUint(uint64(usernamehash), 10)
+	
+	err := db_redis.ZAdd(db_redis.Context(), userkey, &redis.Z{
+		Score: float64(time.Now().Unix()), 
+		Member: member,
+	}).Err()
+	if err != nil {
+		return err
+	}
+
+	// ? Store passhass and salt in Redis a key prefix
+	err = db_redis.HMSet(db_redis.Context(), "u:"+member, map[string]interface{}{
+		"passhash": passHash,
+		"salt": salt,
+	}).Err()
+	if err != nil {
+		return err
+	}
+
+	// ! this is cron job to remove the user from the active_user set (passhash)
+	// err = db_redis.Expire(ctx, "user:"+member, 30*24*time.Hour).Err()
+	// if err != nil {
+	// 	return err
+	// }
+
+	// ! this is cron job to remove the user from the zAdd 
+	// err = db_redis.Expire(ctx, "active_user", 30*24*time.Hour).Err()
+	// if err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
