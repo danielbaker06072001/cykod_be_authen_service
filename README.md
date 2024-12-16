@@ -37,8 +37,9 @@ This project provides a robust authentication system to manage user registration
 
 ## Getting Started
 - Before diving into the setup and usage, it's essential to first understand the flow of the authentication process. This includes how user registration, password hashing, and authentication work together in the system. 
+Database Document: https://docs.google.com/document/d/1UksY_m3XHSLu2WLhkvc7wLOS2bXPRtqLkuNp8OvtzXk/edit?usp=sharing
+
 ![Database Design](https://github.com/user-attachments/assets/d7c75e7d-2c47-4a9f-a81a-f60bb8df3bee)
-![Database Document](https://docs.google.com/document/d/1UksY_m3XHSLu2WLhkvc7wLOS2bXPRtqLkuNp8OvtzXk/edit?usp=sharing)
 
 - Once you understand the flow, I'll provide some images to help illustrate the process and make it easier to follow.
 ![authentication_flow](https://github.com/user-attachments/assets/11546488-3269-41f9-8507-f660b201c051)
