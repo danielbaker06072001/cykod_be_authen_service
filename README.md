@@ -48,8 +48,7 @@ Database Document: https://docs.google.com/document/d/1UksY_m3XHSLu2WLhkvc7wLOS2
 - Once you understand the flow, I'll provide some images to help illustrate the process and make it easier to follow.
 ![Register Flow](https://github.com/user-attachments/assets/2ac66d86-9513-49fd-9988-3e08ffe739ee)
 
-![Login Flow](https://github.com/user-attachments/assets/43832927-b3cf-4b77-9e93-c6118376022f)
-
+![Login Flow](https://github.com/user-attachments/assets/864f9743-328c-4917-8c39-6058b60727b0)
 
 ![authentication_flow](https://github.com/user-attachments/assets/11546488-3269-41f9-8507-f660b201c051)
 
