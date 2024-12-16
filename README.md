@@ -8,21 +8,6 @@
 
 [https://www.youtube.com/watch?v=ffYCgcDgsfw]
 
-# How to create migrate file
-
-migrate create -ext sql -dir Migration/sql -seq create_users_table
-
-# How to run migrate up
-
-make <command_in_makefile>
-
-# How to connect to redis from docker, and how to check if bit exist
-
-docker exec -it authentication_redis redis-cli
-
--   CHECK BIT: getbit u:bit 4097051691
--   SET BIT : setbit u:bit 4097051691
-
 # Authentication Services
 
 This project implements authentication services for user management, including functionalities for user registration, login, and password hashing with salt. The services are written in Go and use a secure hashing algorithm to protect user passwords.
@@ -91,7 +76,7 @@ DB_PASSWORD=your_database_password
 DB_NAME=your_database_name
 ```
 
-**Usage**
+## usage
 1. Run the service:
 ```bash
 go run main.go
@@ -131,3 +116,18 @@ curl -X POST http://localhost:8080/register -H "Content-Type: application/json" 
 curl -X POST http://localhost:8080/login -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
 ```
 
+### Additional commands for testing
+# How to create migrate file
+
+migrate create -ext sql -dir Migration/sql -seq create_users_table
+
+# How to run migrate up
+
+make <command_in_makefile>
+
+# How to connect to redis from docker, and how to check if bit exist
+
+docker exec -it authentication_redis redis-cli
+
+-   CHECK BIT: getbit u:bit 4097051691
+-   SET BIT : setbit u:bit 4097051691
