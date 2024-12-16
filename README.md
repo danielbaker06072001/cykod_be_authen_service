@@ -22,3 +22,104 @@ docker exec -it authentication_redis redis-cli
 
 -   CHECK BIT: getbit u:bit 4097051691
 -   SET BIT : setbit u:bit 4097051691
+
+# Authentication Services
+
+This project implements authentication services for user management, including functionalities for user registration, login, and password hashing with salt. The services are written in Go and use a secure hashing algorithm to protect user passwords.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+This project provides a robust authentication system to manage user registration and login processes. It securely stores user passwords using a combination of hashing and salting techniques to ensure security.
+
+## Features
+
+- User Registration
+- User Login
+- Password Hashing with Salt
+- User Authentication
+- Error Handling
+
+## Getting Started
+
+### Prerequisites
+
+- Go 1.17 or later
+- A running instance of a SQL database (e.g., MySQL, PostgreSQL)
+- Git
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/authentication-services.git
+   cd authentication-services
+Install dependencies:
+bash
+Copy code
+go mod tidy
+Configuration
+Database Configuration: Configure your database connection in the config package. Update the config.go file with your database connection details.
+
+Environment Variables: Create a .env file in the root directory of the project and set the following variables:
+
+makefile
+Copy code
+DB_HOST=your_database_host
+DB_PORT=your_database_port
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_NAME=your_database_name
+Usage
+Run the service:
+
+bash
+Copy code
+go run main.go
+Register a new user: Send a POST request to /register with the following JSON body:
+
+json
+Copy code
+{
+  "username": "exampleuser",
+  "password": "examplepassword"
+}
+Login with an existing user: Send a POST request to /login with the following JSON body:
+
+json
+Copy code
+{
+  "username": "exampleuser",
+  "password": "examplepassword"
+}
+API Endpoints
+POST /register: Registers a new user.
+POST /login: Authenticates a user and returns a success message if the credentials are valid.
+Example Request
+Register:
+
+bash
+Copy code
+curl -X POST http://localhost:8080/register -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
+Login:
+
+bash
+Copy code
+curl -X POST http://localhost:8080/login -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
+Contributing
+Contributions are welcome! Please read the contributing guidelines first.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
