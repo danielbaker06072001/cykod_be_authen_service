@@ -2,6 +2,10 @@
 
 This project implements authentication services for user management, including functionalities for user registration, login, and password hashing with salt. The services are written in Go and use a secure hashing algorithm to protect user passwords.
 
+Future Development:
+- Email services
+- Cron job to cleanup data
+  
 ## Table of Contents
 
 - [Overview](#overview)
@@ -42,6 +46,11 @@ Database Document: https://docs.google.com/document/d/1UksY_m3XHSLu2WLhkvc7wLOS2
 ![Database Design](https://github.com/user-attachments/assets/d7c75e7d-2c47-4a9f-a81a-f60bb8df3bee)
 
 - Once you understand the flow, I'll provide some images to help illustrate the process and make it easier to follow.
+![Register Flow](https://github.com/user-attachments/assets/2ac66d86-9513-49fd-9988-3e08ffe739ee)
+
+![Login Flow](https://github.com/user-attachments/assets/43832927-b3cf-4b77-9e93-c6118376022f)
+
+
 ![authentication_flow](https://github.com/user-attachments/assets/11546488-3269-41f9-8507-f660b201c051)
 
 
