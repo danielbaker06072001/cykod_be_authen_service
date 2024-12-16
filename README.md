@@ -66,60 +66,60 @@ This project provides a robust authentication system to manage user registration
    ```bash
    git clone https://github.com/yourusername/authentication-services.git
    cd authentication-services
-Install dependencies:
-bash
-Copy code
-go mod tidy
-Configuration
-Database Configuration: Configure your database connection in the config package. Update the config.go file with your database connection details.
+   ```
 
-Environment Variables: Create a .env file in the root directory of the project and set the following variables:
+2.. **Install dependencies:**
+    ```bash
+    go mod tidy
+    ```
+
+    ## Configuration
+- *Database Configuration*: Configure your database connection in the config package. Update the config.go file with your database connection details.
+
+- *Environment Variables*: Create a .env file in the root directory of the project and set the following variables:
 
 makefile
-Copy code
+```bash
 DB_HOST=your_database_host
 DB_PORT=your_database_port
 DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_NAME=your_database_name
-Usage
-Run the service:
+```
 
-bash
-Copy code
+**Usage**
+1. Run the service:
+```bash
 go run main.go
 Register a new user: Send a POST request to /register with the following JSON body:
+```
 
-json
+2. Registering a new User: Send a POST request to /register with the following JSOn
+```bash
+{
+  "username": "exampleuser",
+  "password": "examplepassword"
+}
+```
+
+3. Login with an existing user: Send a POST request to /login with the following JSON body:
 Copy code
 {
   "username": "exampleuser",
   "password": "examplepassword"
 }
-Login with an existing user: Send a POST request to /login with the following JSON body:
 
-json
-Copy code
-{
-  "username": "exampleuser",
-  "password": "examplepassword"
-}
-API Endpoints
+**API endpoints**
 POST /register: Registers a new user.
 POST /login: Authenticates a user and returns a success message if the credentials are valid.
-Example Request
-Register:
 
-bash
-Copy code
+**Example Request**
+1. Register:
+```bash
 curl -X POST http://localhost:8080/register -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
-Login:
-
-bash
-Copy code
+```
+2. Login:
+```bash
 curl -X POST http://localhost:8080/login -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
-Contributing
-Contributions are welcome! Please read the contributing guidelines first.
+```
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
