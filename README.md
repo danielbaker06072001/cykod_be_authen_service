@@ -96,13 +96,13 @@ Register a new user: Send a POST request to /register with the following JSON bo
 
 2. Registering a new User: Send a POST request to /register with the following JSOn
 ```bash
-// {
-//     "username": "test",
-//     "password": "Test",
-//     "first_name": "test",
-//     "last_name": "test",
-//     "email": "test1@gmail.com"
-// }
+{
+    "username": "test",
+    "password": "Test",
+    "first_name": "test",
+    "last_name": "test",
+    "email": "test1@gmail.com"
+}
 ```
 
 3. Login with an existing user: Send a POST request to /login with the following JSON body:
