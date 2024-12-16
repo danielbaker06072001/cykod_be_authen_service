@@ -22,7 +22,7 @@ This project implements authentication services for user management, including f
   - [Configuration](#configuration)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [Contributing](#contributing)
+- [Additional Command](#command)
 
 ## Overview
 
@@ -102,7 +102,7 @@ Register a new user: Send a POST request to /register with the following JSON bo
 }
 ```
 
-**API endpoints**
+#api-endpoints
 POST /register: Registers a new user.
 POST /login: Authenticates a user and returns a success message if the credentials are valid.
 
@@ -116,16 +116,18 @@ curl -X POST http://localhost:8080/register -H "Content-Type: application/json" 
 curl -X POST http://localhost:8080/login -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
 ```
 
-### Additional commands for testing
-# How to create migrate file
+# Command
+# Additional commands for testing
+
+### How to create migrate file
 
 migrate create -ext sql -dir Migration/sql -seq create_users_table
 
-# How to run migrate up
+### How to run migrate up
 
 make <command_in_makefile>
 
-# How to connect to redis from docker, and how to check if bit exist
+### How to connect to redis from docker, and how to check if bit exist
 
 docker exec -it authentication_redis redis-cli
 
