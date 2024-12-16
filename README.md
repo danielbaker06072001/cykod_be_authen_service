@@ -116,7 +116,10 @@ curl -X POST http://localhost:8080/register -H "Content-Type: application/json" 
 curl -X POST http://localhost:8080/login -H "Content-Type: application/json" -d '{"username": "exampleuser", "password": "examplepassword"}'
 ```
 
-# Additional commands for testing
+
+
+
+# Additional Command
 
 ### How to create migrate file
 
