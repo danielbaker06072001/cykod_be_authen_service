@@ -38,7 +38,6 @@ This project implements authentication services for user management, including f
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
@@ -53,6 +52,11 @@ This project provides a robust authentication system to manage user registration
 - Error Handling
 
 ## Getting Started
+- Before diving into the setup and usage, it's essential to first understand the flow of the authentication process. This includes how user registration, password hashing, and authentication work together in the system. 
+
+- Once you understand the flow, I'll provide some images to help illustrate the process and make it easier to follow.
+![authentication_flow](https://github.com/user-attachments/assets/11546488-3269-41f9-8507-f660b201c051)
+
 
 ### Prerequisites
 
